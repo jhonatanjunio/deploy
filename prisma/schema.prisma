@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  email           String   @unique
+  password        String
+  profile_picture String?
+  tasks           Task[]
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Task {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String     @db.ObjectId
+  taskStatusId String     @db.ObjectId
+  taskStatus   TaskStatus @relation(fields: [taskStatusId], references: [id])
+
+  @@map("tasks")
+}
+
+model TaskStatus {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  title String @unique
+  tasks Task[]
+
+  @@map("task_status")
+}
