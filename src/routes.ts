@@ -24,7 +24,7 @@ export function setupRoutes(app: Application) {
 
     app.post("/send-file", upload.single('file'), TaskController.sendFile);
     app.get("/healthz", function(req: Request, res: Response) {
-        res.status(200).json({"msg":"Servidor OK!"});
+        return res.status(200).json({"msg":"Servidor OK!"});
     });
 
     router.group("/tasks", (router) => {        
